@@ -1,12 +1,11 @@
 name: ci
 
 on:
-  push:
   pull_request:
 
 jobs:
   docker-checkout1:
-    runs-on: ecam-ai-ml-1
+    runs-on: ecam-ai-ml-experiments
     container: docker:git
     steps:
       - run: |
@@ -24,7 +23,7 @@ jobs:
 
   host-checkout:
     needs: docker-checkout1
-    runs-on: ecam-ai-ml-1
+    runs-on: ecam-ai-ml-experiments
     steps:
       - run: |
           cat .git/config || true
@@ -48,7 +47,7 @@ jobs:
 
   docker-checkout2:
     needs: host-checkout
-    runs-on: ecam-ai-ml-1
+    runs-on: ecam-ai-ml-experiments
     container: docker:git
     steps:
       - run: |
