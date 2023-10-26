@@ -1,0 +1,65 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  docker-checkout1:
+    runs-on: ecam-ai-ml-1
+    container: docker:git
+    steps:
+      - run: |
+          cat .git/config || true
+          cat .git/hooks/post-checkout || true
+
+      - uses: actions/checkout@v4.1.0
+        with:
+          fetch-depth: 50
+
+      - run: |
+          cat .git/config || true
+          cat .git/hooks/post-checkout || true
+          cat large-file.txt
+
+  host-checkout:
+    needs: docker-checkout1
+    runs-on: ecam-ai-ml-1
+    steps:
+      - run: |
+          cat .git/config || true
+          cat .git/hooks/post-checkout || true
+
+      - uses: actions/checkout@v4.1.0
+        with:
+          fetch-depth: 50
+
+      - run: |
+          cat .git/config || true
+          cat .git/hooks/post-checkout || true
+          cat large-file.txt
+
+      - run: git lfs fetch && git lfs checkout
+
+      - run: |
+          cat .git/config || true
+          cat .git/hooks/post-checkout || true
+          cat large-file.txt
+
+  docker-checkout2:
+    needs: host-checkout
+    runs-on: ecam-ai-ml-1
+    container: docker:git
+    steps:
+      - run: |
+          cat .git/config || true
+          cat .git/hooks/post-checkout || true
+
+      - uses: actions/checkout@v4.1.0
+        with:
+          fetch-depth: 50
+
+      - run: |
+          cat .git/config || true
+          cat .git/hooks/post-checkout || true
+          cat large-file.txt
